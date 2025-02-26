@@ -1,0 +1,75 @@
+ /* Sidebar Styles */
+.sidebar {
+  background-color: #000758; /* Custom background color for sidebar */
+  min-height: 100vh; /* Full height */
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+/* Navigation Link Styling */
+.nav-link {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  color: #fff; /* White color for text */
+  text-decoration: none;
+  font-size: 1.2em;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover effect for nav links */
+.nav-link:hover {
+  color: #f1f1f1; /* Slightly lighter color for hover effect */
+  transform: scale(1.05); /* Apply zoom effect */
+}
+
+/* Exit Link Styling */
+.nav-link.exit-link {
+  margin-top: auto; /* Position towards the bottom */
+  color: #fff;
+  border: 2px solid #fff; /* White border for the exit button */
+  border-radius: 5px;
+  padding: 4px 8px; /* Reduced padding for tighter fit */
+  font-size: 0.8em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.nav-link.exit-link:hover {
+  transform: scale(1.05); /* Apply scale transform for zoom effect */
+  color: #000758; /* Color when hovered */
+  background-color: #f1f1f1; /* Light background color on hover */
+}
+
+/* Media Query Adjustments */
+@media (max-width: 1024px) {
+  .sidebar {
+    padding: 20px 0; /* Add padding to the sides for smaller screens */
+  }
+
+  .nav-link {
+    font-size: 1.1em; /* Adjust font size for larger screens */
+  }
+
+  .nav-link.exit-link {
+    font-size: 0.9em; /* Adjusted font size for larger screens */
+    padding: 12px 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .sidebar {
+    padding: 10px 0;
+  }
+
+  .nav-link {
+    font-size: 1em; /* Adjust font size for small screens */
+  }
+
+  .nav-link.exit-link {
+    font-size: 0.75em; /* Further adjusted font size for smaller screens */
+    padding: 8px 10px;
+  }
+}

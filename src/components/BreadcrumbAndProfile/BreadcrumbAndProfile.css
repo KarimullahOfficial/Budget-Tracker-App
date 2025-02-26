@@ -1,0 +1,21 @@
+.custom-breadcrumb {
+  height: 60px; /* Example height */
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--breadcrumb);
+}
+
+
+  @media (max-width: 768px) {
+    .custom-breadcrumb {
+      font-size: 14px; /* Adjust font size for responsiveness */
+    }
+
+    .profile {
+        display: none;
+    }
+  }
+  
+
+ 
