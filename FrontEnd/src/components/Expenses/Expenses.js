@@ -7,11 +7,10 @@ import { faPlusCircle, faPenToSquare, faTrashCan } from '@fortawesome/free-solid
 import { Formik, Field, ErrorMessage } from 'formik'; // Import Formik components
 import * as Yup from 'yup'; // Import Yup for validation
 import InfoCard from '../InfoCard/InfoCard';
+import useTransactions from '../hook/apihook';
+
 function Expenses() {
-  const [expenses, setExpenses] = useState(() => {
-    const savedExpenses = localStorage.getItem('expenses');
-    return savedExpenses ? JSON.parse(savedExpenses) : [];
-  });
+  const { transactions, loading, error, addTransaction, updateTransaction, deleteTransaction } = useTransactions('expense');
   const [editing, setEditing] = useState(false);
   const [currentExpense, setCurrentExpense] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -21,11 +20,7 @@ function Expenses() {
 
   const categories = ['Utility', 'Rent', 'Groceries', 'Entertainment', 'Other'];
 
-  useEffect(() => {
-    localStorage.setItem('expenses', JSON.stringify(expenses));
-  }, [expenses]);
 
-  // Yup Validation Schema
   const validationSchema = Yup.object({
     name: Yup.string().required('Name is required'),
     amount: Yup.number()
@@ -47,12 +42,13 @@ function Expenses() {
       id: editing ? currentExpense.id : Date.now(),
       ...values,
       status: values.isPaid ? "PAID" : "DUE",
+      type: "expense",
     };
 
     if (editing) {
-      setExpenses(expenses.map(expense => expense.id === currentExpense.id ? expenseData : expense));
+      updateTransaction(currentExpense.id, expenseData);
     } else {
-      setExpenses([...expenses, expenseData]);
+      addTransaction(expenseData);
     }
 
     setShowModal(false);
@@ -61,21 +57,21 @@ function Expenses() {
   const handleRemove = (id) => {
     const isConfirmed = window.confirm("Are you sure you want to remove this expense?");
     if (isConfirmed) {
-      setExpenses(expenses.filter(expense => expense.id !== id));
+      deleteTransaction(id);
     }
   };
 
-  const totalExpense = expenses.reduce((total, expense) => total + parseFloat(expense.amount), 0);
+  const totalExpense = transactions.reduce((total, expense) => total + parseFloat(expense.amount), 0);
 
   const filteredExpenses = searchQuery.length > 0
-    ? expenses.filter(expense =>
+    ? transactions.filter(expense =>
         expense.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         expense.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (expense.category?.toLowerCase() || '').includes(searchQuery.toLowerCase())
       )
-    : expenses;
+    : transactions;
 
-  // Pagination Logic
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentExpenses = filteredExpenses.slice(indexOfFirstItem, indexOfLastItem);
@@ -93,11 +89,9 @@ function Expenses() {
           <BreadcrumbAndProfile
             breadcrumbItems={[
               { name: 'Dashboard', path: '/dashboard', active: false },
-              { name: 'Expence', path: '/expence', active: true }
+              { name: 'Expenses', path: '/expenses', active: true }
             ]}
-          
           />
-          
 
           {/* Search Bar */}
           <InputGroup className="mb-3">
@@ -113,7 +107,7 @@ function Expenses() {
           <Row className="d-flex justify-content-between align-items-center mb-3">
             <Col md={4}>
               <InfoCard
-                title="Expence"
+                title="Expenses"
                 value={`$${totalExpense}`}
                 linkText="View details"
                 linkTo="/expense"
@@ -122,7 +116,7 @@ function Expenses() {
             </Col>
             <Col className="text-end">
               <Button onClick={() => setShowModal(true)} className="primary-button">
-                <FontAwesomeIcon icon={faPlusCircle} className="icon-right" /> Add Income
+                <FontAwesomeIcon icon={faPlusCircle} className="icon-right" /> Add Expense
               </Button>
             </Col>
           </Row>
